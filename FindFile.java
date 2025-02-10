@@ -20,14 +20,66 @@ import java.io.*;;
  * traverse through directories using dfs
  */
 
-// class File {
-//     private String name;
-//     private String size;
-// }
+/*
 
-// class Directory {
-//     List<Directory> directories;
-// }
+public interface FileSystem {
+    public void ls();
+}
+ 
+public class Directory implements FileSystem {
+
+    String directoryName;
+    List<FileSystem> fileSystemList;
+
+    public Directory(String name){
+        this.directoryName = name;
+        fileSystemList = new ArrayList<>();
+    }
+
+    public void add(FileSystem fileSystemObj) {
+        fileSystemList.add(fileSystemObj);
+    }
+
+    public void ls(){
+        System.out.println("Directory name " + directoryName);
+
+        for(FileSystem fileSystemObj : fileSystemList){
+            fileSystemObj.ls();
+        }
+    }
+}
+
+public class File implements FileSystem{
+    String fileName;
+
+    public File(String name){
+        this.fileName = name;
+    }
+
+    public void ls(){
+        System.out.println("file name " + fileName);
+    }
+}
+
+public class Main {
+    public static void main(String args[]){
+
+    Directory movieDirectory = new Directory("Movie");
+
+    FileSystem border = new File("Border");
+    movieDirectory.add(border);
+
+    Directory comedyMovieDirectory = new Directory("ComedyMovie");
+    File hulchul = new File("Hulchul");
+    comedyMovieDirectory.add(hulchul);
+    movieDirectory.add(comedyMovieDirectory);
+
+    movieDirectory.ls();
+
+    }
+}
+ */
+
 
 interface FileSystem {
     public void ls();

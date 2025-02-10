@@ -238,3 +238,134 @@ public class LockerSystemExample {
         System.out.println("Assigned pkg3: " + assigned3);
     }
 }
+
+
+//python
+/*
+from collections import deque
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Dict, Optional
+
+
+class LockerType(Enum):
+    STANDARD = "STANDARD"
+    FREEZE = "FREEZE"
+    GLASS = "GLASS"
+
+
+class Locker:
+    def __init__(self, locker_id: int, size: int, locker_type: LockerType):
+        self.locker_id = locker_id
+        self.size = size
+        self.type = locker_type
+
+    def __repr__(self):
+        return f"Locker(id={self.locker_id}, size={self.size}, type={self.type})"
+
+
+class Package:
+    def __init__(self, package_id: str, required_size: int, preferred_type: Optional[LockerType]):
+        self.package_id = package_id
+        self.required_size = required_size
+        self.preferred_type = preferred_type
+
+    def __repr__(self):
+        return f"Package(id={self.package_id}, size={self.required_size}, type={self.preferred_type})"
+
+
+class LockerAssignment:
+    def __init__(self, locker: Locker, pkg: Package):
+        self.locker = locker
+        self.pkg = pkg
+        self.assigned_time = datetime.now()
+
+    def __repr__(self):
+        return f"LockerAssignment(locker={self.locker}, pkg={self.pkg}, assigned_time={self.assigned_time})"
+
+
+class LockerManager:
+    def __init__(self):
+        # Mapping (size, type) to a queue of empty lockers
+        self.empty_lockers_map: Dict[tuple, deque] = {}
+
+        # Used lockers keyed by package ID
+        self.used_lockers: Dict[str, LockerAssignment] = {}
+
+    def add_empty_locker(self, locker: Locker):
+        key = (locker.size, locker.type)
+        if key not in self.empty_lockers_map:
+            self.empty_lockers_map[key] = deque()
+        self.empty_lockers_map[key].append(locker)
+
+    def assign_locker_for_package(self, pkg: Package) -> bool:
+        if pkg.preferred_type:
+            key = (pkg.required_size, pkg.preferred_type)
+            if self._try_assign_from_queue(key, pkg):
+                return True
+            return False  # Strict type match required
+        else:
+            # Try all locker types for the given size
+            for locker_type in LockerType:
+                key = (pkg.required_size, locker_type)
+                if self._try_assign_from_queue(key, pkg):
+                    return True
+            return False
+
+    def _try_assign_from_queue(self, key: tuple, pkg: Package) -> bool:
+        if key in self.empty_lockers_map and self.empty_lockers_map[key]:
+            assigned_locker = self.empty_lockers_map[key].popleft()
+            self.used_lockers[pkg.package_id] = LockerAssignment(assigned_locker, pkg)
+            return True
+        return False
+
+    def release_locker(self, package_id: str):
+        if package_id in self.used_lockers:
+            assignment = self.used_lockers.pop(package_id)
+            key = (assignment.locker.size, assignment.locker.type)
+            if key not in self.empty_lockers_map:
+                self.empty_lockers_map[key] = deque()
+            self.empty_lockers_map[key].append(assignment.locker)
+
+    def cleanup_stale_packages(self, threshold: datetime):
+        to_remove = [
+            package_id
+            for package_id, assignment in self.used_lockers.items()
+            if assignment.assigned_time < threshold
+        ]
+        for package_id in to_remove:
+            self.release_locker(package_id)
+
+
+# Example usage:
+if __name__ == "__main__":
+    manager = LockerManager()
+
+    # Add some empty lockers
+    manager.add_empty_locker(Locker(1, 10, LockerType.STANDARD))
+    manager.add_empty_locker(Locker(2, 10, LockerType.FREEZE))
+    manager.add_empty_locker(Locker(3, 10, LockerType.STANDARD))
+
+    # Create packages
+    pkg1 = Package("pkgA", 10, LockerType.FREEZE)
+    pkg2 = Package("pkgB", 10, None)  # No preferred type
+
+    # Assign lockers
+    assigned1 = manager.assign_locker_for_package(pkg1)
+    assigned2 = manager.assign_locker_for_package(pkg2)
+
+    print(f"Assigned pkg1: {assigned1}")
+    print(f"Assigned pkg2: {assigned2}")
+
+    # Release a locker
+    manager.release_locker("pkgA")
+
+    # Assign a new package
+    pkg3 = Package("pkgC", 10, LockerType.STANDARD)
+    assigned3 = manager.assign_locker_for_package(pkg3)
+    print(f"Assigned pkg3: {assigned3}")
+
+    # Cleanup stale packages
+    manager.cleanup_stale_packages(datetime.now() - timedelta(hours=1))
+
+ */
