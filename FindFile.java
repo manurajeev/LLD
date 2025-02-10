@@ -162,6 +162,9 @@ class FileRuleSize implements FileRule {
        switch (this.op) {
         case LT:
             return f.length() < size;
+        case GT:
+            return f.length() > size;
+        //implement rest
         default:
             return false;
        }
